@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Http\Request;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\CategoryController;
+use App\Http\Controllers\Api\EmployeeController;
 use App\Http\Controllers\Api\ProjectController;
 use App\Http\Controllers\Api\SettingController;
 use Illuminate\Support\Facades\Route;
@@ -18,17 +18,14 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
 
 Route::post('/register',[AuthController::class,'register']);
 Route::post('/login',[AuthController::class,'login']);
 Route::get('/{token}/verify',[AuthController::class,'verify']);
 
-// settings
+Route::group(['middleware'=> 'auth:sanctum'], function () {
+    // settings
 Route::apiResource('settings', SettingController::class);
-
 
 // Projects_categories 
 Route::get('/Category',[CategoryController::class,'all']);
@@ -54,5 +51,5 @@ Route::get('/projects_nothidden',[ProjectController::class,'appear']);
 Route::get('/projects_hidden',[ProjectController::class,'hidden']);
 
 Route::apiResource('employees', EmployeeController::class);
-
+});
 
